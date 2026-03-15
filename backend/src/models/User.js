@@ -26,29 +26,22 @@ const User = sequelize.define('User', {
     unique: true
   },
   password_hash: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
     allowNull: false
+  },
+  role: {
+    type: DataTypes.ENUM('citizen', 'agent', 'admin', 'superadmin'),
+    defaultValue: 'citizen'
   },
   commune_id: {
     type: DataTypes.UUID,
     allowNull: true
   },
-  // Rôle : citizen | agent | admin | super_admin
-  role: {
-    type: DataTypes.ENUM('citizen', 'agent', 'admin', 'super_admin'),
-    defaultValue: 'citizen'
-  },
-  // Structure associée (pour les agents)
   structure_id: {
     type: DataTypes.UUID,
     allowNull: true
   },
-  // Vérification OTP SMS
-  is_phone_verified: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  otp_code: {
+  otp: {
     type: DataTypes.STRING(6),
     allowNull: true
   },
@@ -56,14 +49,17 @@ const User = sequelize.define('User', {
     type: DataTypes.DATE,
     allowNull: true
   },
-  // Token FCM pour notifications push
-  fcm_token: {
-    type: DataTypes.TEXT,
-    allowNull: true
+  is_verified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   },
   is_active: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
+  },
+  fcm_token: {
+    type: DataTypes.TEXT,
+    allowNull: true
   },
   avatar_url: {
     type: DataTypes.TEXT,

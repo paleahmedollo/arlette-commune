@@ -1,41 +1,37 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Notification = sequelize.define('Notification', {
+const Message = sequelize.define('Message', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true
   },
-  user_id: {
-    type: DataTypes.UUID,
-    allowNull: false
-  },
   report_id: {
     type: DataTypes.UUID,
-    allowNull: true
-  },
-  title: {
-    type: DataTypes.STRING(200),
     allowNull: false
   },
-  body: {
+  sender_id: {
+    type: DataTypes.UUID,
+    allowNull: false
+  },
+  sender_type: {
+    type: DataTypes.ENUM('citizen', 'agent'),
+    allowNull: false
+  },
+  content: {
     type: DataTypes.TEXT,
     allowNull: false
-  },
-  type: {
-    type: DataTypes.ENUM('status_update', 'new_message', 'ticket_created', 'resolved'),
-    defaultValue: 'status_update'
   },
   is_read: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   }
 }, {
-  tableName: 'notifications',
+  tableName: 'messages',
   timestamps: true,
   createdAt: 'created_at',
   updatedAt: 'updated_at'
 });
 
-module.exports = Notification;
+module.exports = Message;

@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-// Structures responsables : Mairie, Police, SODECI, CIE, Pompiers, etc.
 const Structure = sequelize.define('Structure', {
   id: {
     type: DataTypes.UUID,
@@ -13,24 +12,12 @@ const Structure = sequelize.define('Structure', {
     allowNull: false
   },
   type: {
-    type: DataTypes.ENUM(
-      'mairie',
-      'police',
-      'sodeci',
-      'cie',
-      'pompiers',
-      'sante',
-      'transport',
-      'environnement',
-      'autre'
-    ),
+    type: DataTypes.ENUM('mairie', 'police', 'sodeci', 'cie', 'pompiers', 'autre'),
     allowNull: false
   },
-  // Catégories de problèmes gérées par cette structure
-  // ex: ["route","lampadaire","dechets"]
-  categories: {
-    type: DataTypes.JSONB,
-    defaultValue: []
+  commune_id: {
+    type: DataTypes.UUID,
+    allowNull: true
   },
   email: {
     type: DataTypes.STRING(150),
@@ -40,9 +27,9 @@ const Structure = sequelize.define('Structure', {
     type: DataTypes.STRING(20),
     allowNull: true
   },
-  commune_id: {
-    type: DataTypes.UUID,
-    allowNull: true  // null = structure nationale
+  address: {
+    type: DataTypes.TEXT,
+    allowNull: true
   },
   is_active: {
     type: DataTypes.BOOLEAN,

@@ -11,8 +11,7 @@ const Commune = sequelize.define('Commune', {
     type: DataTypes.STRING(150),
     allowNull: false
   },
-  // Ville / département parent
-  city: {
+  department: {
     type: DataTypes.STRING(150),
     allowNull: true
   },
@@ -20,7 +19,6 @@ const Commune = sequelize.define('Commune', {
     type: DataTypes.STRING(150),
     allowNull: true
   },
-  // Coordonnées GPS approximatives du centre
   latitude: {
     type: DataTypes.DECIMAL(10, 8),
     allowNull: true

@@ -1,48 +1,51 @@
-const sequelize = require('../config/database');
 const User = require('./User');
 const Commune = require('./Commune');
 const Structure = require('./Structure');
+const Category = require('./Category');
 const Report = require('./Report');
-const Ticket = require('./Ticket');
-const TicketMessage = require('./TicketMessage');
+const Message = require('./Message');
 const Notification = require('./Notification');
 
-// ── Relations ─────────────────────────────────────────────
-// User ↔ Commune
+// User <-> Commune
 User.belongsTo(Commune, { foreignKey: 'commune_id', as: 'commune' });
-Commune.hasMany(User, { foreignKey: 'commune_id' });
+Commune.hasMany(User, { foreignKey: 'commune_id', as: 'users' });
 
-// Report ↔ User
-Report.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
-User.hasMany(Report, { foreignKey: 'user_id' });
+// User <-> Structure
+User.belongsTo(Structure, { foreignKey: 'structure_id', as: 'structure' });
+Structure.hasMany(User, { foreignKey: 'structure_id', as: 'agents' });
 
-// Report ↔ Commune
+// Structure <-> Commune
+Structure.belongsTo(Commune, { foreignKey: 'commune_id', as: 'commune' });
+Commune.hasMany(Structure, { foreignKey: 'commune_id', as: 'structures' });
+
+// Report <-> User (citoyen)
+Report.belongsTo(User, { foreignKey: 'user_id', as: 'citizen' });
+User.hasMany(Report, { foreignKey: 'user_id', as: 'reports' });
+
+// Report <-> Commune
 Report.belongsTo(Commune, { foreignKey: 'commune_id', as: 'commune' });
-Commune.hasMany(Report, { foreignKey: 'commune_id' });
+Commune.hasMany(Report, { foreignKey: 'commune_id', as: 'reports' });
 
-// Report ↔ Structure (structure responsable)
+// Report <-> Structure
 Report.belongsTo(Structure, { foreignKey: 'structure_id', as: 'structure' });
-Structure.hasMany(Report, { foreignKey: 'structure_id' });
+Structure.hasMany(Report, { foreignKey: 'structure_id', as: 'reports' });
 
-// Ticket ↔ Report (1-1)
-Ticket.belongsTo(Report, { foreignKey: 'report_id', as: 'report' });
-Report.hasOne(Ticket, { foreignKey: 'report_id', as: 'ticket' });
+// Report <-> Category
+Report.belongsTo(Category, { foreignKey: 'category_id', as: 'category' });
+Category.hasMany(Report, { foreignKey: 'category_id', as: 'reports' });
 
-// TicketMessage ↔ Ticket
-TicketMessage.belongsTo(Ticket, { foreignKey: 'ticket_id', as: 'ticket' });
-Ticket.hasMany(TicketMessage, { foreignKey: 'ticket_id', as: 'messages' });
+// Message <-> Report
+Message.belongsTo(Report, { foreignKey: 'report_id', as: 'report' });
+Report.hasMany(Message, { foreignKey: 'report_id', as: 'messages' });
 
-// Notification ↔ User
+// Message <-> User
+Message.belongsTo(User, { foreignKey: 'sender_id', as: 'sender' });
+
+// Notification <-> User
 Notification.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
-User.hasMany(Notification, { foreignKey: 'user_id' });
+User.hasMany(Notification, { foreignKey: 'user_id', as: 'notifications' });
 
-module.exports = {
-  sequelize,
-  User,
-  Commune,
-  Structure,
-  Report,
-  Ticket,
-  TicketMessage,
-  Notification
-};
+// Notification <-> Report
+Notification.belongsTo(Report, { foreignKey: 'report_id', as: 'report' });
+
+module.exports = { User, Commune, Structure, Category, Report, Message, Notification };
